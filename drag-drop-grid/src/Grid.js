@@ -72,7 +72,7 @@ const Grid = () => {
                   height: data.size.height,
                 })
               }
-              resizeHandles={["se", "e", "s"]} // Add handles for resizing
+              resizeHandles={["se"]}
             >
               <div className="grid-table">
                 <div className="table-header">
@@ -87,7 +87,7 @@ const Grid = () => {
                     {table.name}
                   </span>
                   <button
-                    className=""
+                    className="remove-button"
                     onClick={() => removeTable(table.id)}
                     style={{
                       background: "transparent",
@@ -112,20 +112,32 @@ const Grid = () => {
                   <table>
                     <thead>
                       <tr>
-                        <th>Column</th>
+                        <th>
+                          <span className="material-symbols-outlined icon">
+                            check_box
+                          </span>
+                          Column
+                        </th>
                         <th>Data Type</th>
                       </tr>
                     </thead>
                     <tbody>
                       {table.columns.map((column) => (
                         <tr key={column.id}>
-                          <td>{column.name}</td>
+                          <td>
+                            <span className="material-symbols-outlined icon">
+                              check_box
+                            </span>
+                            {column.name}
+                          </td>
                           <td>{column.data_type}</td>
                         </tr>
                       ))}
                     </tbody>
                   </table>
                 </div>
+
+                <div className="scroll-here">Scroll to see more columns</div>
               </div>
             </ResizableBox>
           </div>

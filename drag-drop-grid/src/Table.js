@@ -32,7 +32,7 @@ const Table = ({ table, onAddTable }) => {
             gap: "5px",
           }}
         >
-          <span class="material-symbols-outlined icon">
+          <span className="material-symbols-outlined icon">
             {isExpanded ? "remove" : "add_box"}
           </span>
         </button>
