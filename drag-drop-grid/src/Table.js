@@ -1,27 +1,23 @@
 import React, { useState } from "react";
-import { useDrag } from "react-dnd"; // Import useDrag hook
+import { useDrag } from "react-dnd";
 
 const Table = ({ table, onAddTable }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const toggleExpand = () => {
-    setIsExpanded(!isExpanded); // Toggle the expansion of columns
+    setIsExpanded(!isExpanded);
   };
 
-  // Using useDrag to make this table draggable
   const [{ isDragging }, drag] = useDrag(() => ({
-    type: "TABLE", // Define the type of draggable item
-    item: { table }, // Pass the table data when dragging
+    type: "TABLE",
+    item: { table },
     collect: (monitor) => ({
-      isDragging: monitor.isDragging(), // Track the dragging state
+      isDragging: monitor.isDragging(),
     }),
   }));
 
   return (
-    <div
-      ref={drag} // This makes the component draggable
-      className="left-table"
-    >
+    <div ref={drag} className="left-table">
       <div className="left-table-header">
         <button
           onClick={toggleExpand}
