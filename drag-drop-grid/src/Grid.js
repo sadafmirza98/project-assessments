@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { useDrop } from "react-dnd";
 import Draggable from "react-draggable";
+import { ResizableBox } from "react-resizable";
+import "react-resizable/css/styles.css";
 
 const Grid = () => {
   const [gridTables, setGridTables] = useState([]);
@@ -11,19 +13,32 @@ const Grid = () => {
       if (!gridTables.some((t) => t.id === item.table.id)) {
         setGridTables((prev) => [
           ...prev,
-          { ...item.table, position: { x: 100, y: 100 } },
+          {
+            ...item.table,
+            position: { x: 100, y: 100 },
+            size: { width: 300, height: 200 },
+          },
         ]);
       }
     },
   }));
 
   const handleDragStop = (e, data, tableId) => {
-    const newTablePositions = gridTables.map((table) =>
+    const updatedPositions = gridTables.map((table) =>
       table.id === tableId
         ? { ...table, position: { x: data.x, y: data.y } }
         : table
     );
-    setGridTables(newTablePositions);
+    setGridTables(updatedPositions);
+  };
+
+  const handleResize = (tableId, newSize) => {
+    const updatedSizes = gridTables.map((table) =>
+      table.id === tableId
+        ? { ...table, size: { width: newSize.width, height: newSize.height } }
+        : table
+    );
+    setGridTables(updatedSizes);
   };
 
   const removeTable = (tableId) => {
@@ -37,36 +52,82 @@ const Grid = () => {
           key={table.id}
           position={table.position}
           onStop={(e, data) => handleDragStop(e, data, table.id)}
+          handle=".table-header" // Only the header is draggable
         >
-          <div className="grid-table">
-            <div className="table-header">
-              <span className="material-symbols-outlined icon">table</span>
+          <div
+            style={{
+              width: table.size.width,
+              height: table.size.height,
+              position: "absolute",
+            }}
+          >
+            <ResizableBox
+              width={table.size.width}
+              height={table.size.height}
+              minConstraints={[150, 100]}
+              maxConstraints={[500, 400]}
+              onResizeStop={(e, data) =>
+                handleResize(table.id, {
+                  width: data.size.width,
+                  height: data.size.height,
+                })
+              }
+              resizeHandles={["se", "e", "s"]} // Add handles for resizing
+            >
+              <div className="grid-table">
+                <div className="table-header">
+                  <span className="material-symbols-outlined icon">table</span>
+                  <span
+                    style={{
+                      flex: "1",
+                      fontWeight: "500",
+                      textAlign: "center",
+                    }}
+                  >
+                    {table.name}
+                  </span>
+                  <button
+                    className=""
+                    onClick={() => removeTable(table.id)}
+                    style={{
+                      background: "transparent",
+                      border: "none",
+                      color: "white",
+                      cursor: "pointer",
+                    }}
+                  >
+                    <span className="material-symbols-outlined icon">
+                      close
+                    </span>
+                  </button>
+                </div>
 
-              <span style={{ flex: "1", fontWeight: "500" }}>{table.name}</span>
-
-              <button className="" onClick={() => removeTable(table.id)}>
-                <span className="material-symbols-outlined icon">close</span>
-              </button>
-            </div>
-
-            <div className="grid-table-table">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Column</th>
-                    <th>Data Type</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {table.columns.map((column) => (
-                    <tr key={column.id}>
-                      <td>{column.name}</td>
-                      <td>{column.data_type}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                <div
+                  className="grid-table-table"
+                  style={{
+                    overflow: "auto",
+                    height: "calc(100% - 40px)",
+                  }}
+                >
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Column</th>
+                        <th>Data Type</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {table.columns.map((column) => (
+                        <tr key={column.id}>
+                          <td>{column.name}</td>
+                          <td>{column.data_type}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </ResizableBox>
           </div>
         </Draggable>
       ))}

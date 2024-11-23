@@ -1,8 +1,8 @@
 import React from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import Grid from "./Grid"; // Import your grid component
-import Table from "./Table"; // Import your table component
+import Grid from "./Grid";
+import Table from "./Table";
 
 const App = () => {
   const tables = [
