@@ -1,16 +1,18 @@
-const car = document.querySelector(".car");
-const leftBtn = document.getElementById("left-btn");
-const rightBtn = document.getElementById("right-btn");
-const startBtn = document.getElementById("start-btn");
-const road = document.querySelector(".road");
+const roadWidth = 400; // Updated road width
+const laneWidth = roadWidth / 4; // Calculate lane width for 4 lanes
+let carPosition = roadWidth / 2 - laneWidth / 2; // Start the car in the middle of the road
+
+// Updated the score display
 const scoreBoard = document.querySelector(".score-board");
 const gameOverModal = document.querySelector(".game-over");
 const finalScore = document.getElementById("final-score");
 const restartBtn = document.getElementById("restart-btn");
+const leftBtn = document.getElementById("left-btn");
+const rightBtn = document.getElementById("right-btn");
+const startBtn = document.getElementById("start-btn");
+const road = document.querySelector(".road");
+const car = document.querySelector(".car");
 
-let carPosition = 120;
-const laneWidth = 60;
-const roadWidth = 180;
 let score = 0;
 let gameRunning = false;
 let obstacleInterval;
@@ -22,7 +24,7 @@ function resetGame() {
   gameRunning = false;
   score = 0; // Reset score to 0
   scoreBoard.innerText = `Score: 0`; // Update the score display
-  carPosition = 120;
+  carPosition = roadWidth / 2 - laneWidth / 2; // Reset car position to the middle lane
   car.style.left = `${carPosition}px`;
   gameOverModal.style.display = "none";
   clearInterval(obstacleInterval); // Clear obstacle spawn interval
@@ -63,10 +65,9 @@ function spawnObstacle() {
   const randomImage = `url('./obstacle.png')`; // Ensure the path to the image is correct
   obstacle.style.backgroundImage = randomImage;
 
-  // Random lane (0, 1, or 2)
-  const lane = Math.floor(Math.random() * 3);
-  obstacle.style.left = `${lane * laneWidth + 60}px`; // Position based on the lane
-  obstacle.style.top = `-60px`; // Start above the road
+  const lane = Math.floor(Math.random() * 4);
+  obstacle.style.left = `${lane * laneWidth}px`;
+  obstacle.style.top = `-60px`;
   road.appendChild(obstacle);
   obstacles.push(obstacle);
 
@@ -126,14 +127,14 @@ function gameOver() {
 
 // Move Car
 leftBtn.addEventListener("click", () => {
-  if (carPosition > 60 && gameRunning) {
+  if (carPosition > 0 && gameRunning) {
     carPosition -= laneWidth;
     car.style.left = `${carPosition}px`;
   }
 });
 
 rightBtn.addEventListener("click", () => {
-  if (carPosition < roadWidth && gameRunning) {
+  if (carPosition < roadWidth - laneWidth && gameRunning) {
     carPosition += laneWidth;
     car.style.left = `${carPosition}px`;
   }
